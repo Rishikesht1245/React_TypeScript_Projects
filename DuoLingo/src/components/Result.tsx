@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { countMatchingElements } from "../utils/features";
 
 const Result = () => {
-  const { words, loading, error, result } = useSelector(
+  const { words, result } = useSelector(
     (state: { root: InitialStateType }) => state.root
   );
 
