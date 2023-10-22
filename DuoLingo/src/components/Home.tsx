@@ -33,7 +33,7 @@ const Home = () => {
         p={"2rem"}
         textAlign={"center"}
       >
-        Welcome Begin your journey of learning
+        Welcome, Begin your journey of learning
       </Typography>
 
       {/* languages button row wise */}
