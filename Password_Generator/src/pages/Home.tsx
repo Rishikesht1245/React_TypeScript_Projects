@@ -8,6 +8,7 @@ import {
   Input,
   InputAdornment,
   IconButton,
+  Button,
   Slider,
 } from "@mui/material";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
@@ -62,15 +63,92 @@ const Home = () => {
   };
 
   const handleGeneratePassword = () => {
-    if (length < 1) return toast.error("Password length is 0");
+    if (length < 4) {
+      setPassword("");
+      return toast.error("Password length is less than 4");
+    }
     let optionsValid: boolean = false;
     optionsValid = Object.values(options).some((option) => option === true);
     if (optionsValid) {
       return setPassword(generatePassword(length, options));
+    } else {
+      setPassword("");
+      return toast.error("Please select Preferences");
     }
-    return toast.error("Please select Preferences");
   };
 
+  const saveHandler = (): void => {
+    toast(
+      (t) => (
+        <form
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            const passwordName = e?.currentTarget?.passwordName.value;
+
+            if (!passwordName) {
+              return false;
+            }
+            toast.dismiss(t.id);
+            return saveNewPassword(passwordName);
+          }}
+        >
+          <Stack direction="column" alignItems="center" spacing={1}>
+            <input
+              id="outlined-adornment-password-save"
+              type="text"
+              readOnly
+              value={password}
+              style={{
+                backgroundColor: "rgba(255,255,255,0.6)",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            />
+
+            <input
+              id="outlined-adornment-password-name"
+              type="text"
+              name="passwordName"
+              // placeholder="Password name"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.6)",
+                padding: "10px",
+                borderRadius: "5px",
+              }}
+            />
+          </Stack>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            marginTop={"1rem"}
+          >
+            <Button
+              variant="outlined"
+              type="submit"
+              sx={{ backgroundColor: "green", color: "white" }}
+            >
+              Save
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => toast.dismiss(t.id)}
+              sx={{ backgroundColor: "red", color: "white" }}
+            >
+              Cancel
+            </Button>
+          </Stack>
+        </form>
+      ),
+      {
+        style: {
+          backgroundColor: "rgba(0,0,0,0.8)",
+        },
+      }
+    );
+  };
+
+  const saveNewPassword = (passwordName: string): void => {};
   return (
     <Box
       style={{
@@ -199,6 +277,11 @@ const Home = () => {
                   color="#17172E"
                   action={"save"}
                   width="90%"
+                  onClick={
+                    password
+                      ? saveHandler
+                      : () => toast.error("Please generate a password")
+                  }
                 />
                 <SymbolButton
                   text="Saved Passwords"
