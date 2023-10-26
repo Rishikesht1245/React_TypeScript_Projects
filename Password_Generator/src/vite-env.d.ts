@@ -40,3 +40,10 @@ interface PasswordTableProps {
   passwords: SavedPasswordType[];
   getAllPasswords: () => void;
 }
+
+interface ShowConfirmProps {
+  message: string;
+  handleFunction: (id: string) => Promise<any>;
+  children: ReactNode;
+  params: string;
+}

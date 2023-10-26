@@ -4,10 +4,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, Typography, Stack } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import toast from "react-hot-toast";
+import { deletePassword } from "../models/deletePassword";
+import ShowConfirm from "./UI/ShowConfirm";
 
 export default function PasswordTable({
   pending,
@@ -15,8 +17,9 @@ export default function PasswordTable({
   getAllPasswords,
 }: PasswordTableProps) {
   //   function to delete data
-  const handleDelete = (id: string): void => {
-    console.log(id);
+  const handleDelete = async (id: string): Promise<void> => {
+    await deletePassword(id);
+    await getAllPasswords();
   };
 
   return pending ? (
@@ -28,13 +31,19 @@ export default function PasswordTable({
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <TableCell sx={{ fontWeight: "bold", fontSize: "16px" }}>
+            <TableCell
+              sx={{ fontWeight: "bold", fontSize: "16px", textAlign: "center" }}
+            >
               Name
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold", fontSize: "16px" }}>
+            <TableCell
+              sx={{ fontWeight: "bold", fontSize: "16px", textAlign: "center" }}
+            >
               Password
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold", fontSize: "16px" }}>
+            <TableCell
+              sx={{ fontWeight: "bold", fontSize: "16px", textAlign: "center" }}
+            >
               Actions
             </TableCell>
           </TableRow>
@@ -43,22 +52,36 @@ export default function PasswordTable({
           {passwords.map((password) => {
             return (
               <TableRow hover role="checkbox" tabIndex={-1} key={password.id}>
-                <TableCell sx={{ color: "white" }}>{password.name}</TableCell>
-                <TableCell sx={{ color: "white" }}>
+                <TableCell sx={{ color: "white", textAlign: "center" }}>
+                  {password.name}
+                </TableCell>
+                <TableCell sx={{ color: "white", textAlign: "center" }}>
                   {password.password}
                 </TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDelete(password.id)}>
-                    <DeleteIcon sx={{ color: "orangered" }} />
-                  </IconButton>
-                  <IconButton
-                    onClick={() => {
-                      navigator.clipboard.writeText(password.password);
-                      toast.success("Password copied to clipboard");
-                    }}
+                  <Stack
+                    direction={{ xs: "column", md: "row" }}
+                    justifyContent={"center"}
+                    alignItems={"center"}
                   >
-                    <FileCopyIcon color="primary" />
-                  </IconButton>
+                    <ShowConfirm
+                      message={`Are you sure to delete ${password.name} ?`}
+                      handleFunction={handleDelete}
+                      params={password.id}
+                    >
+                      <IconButton>
+                        <DeleteIcon sx={{ color: "orangered" }} />
+                      </IconButton>
+                    </ShowConfirm>
+                    <IconButton
+                      onClick={() => {
+                        navigator.clipboard.writeText(password.password);
+                        toast.success("Password copied to clipboard");
+                      }}
+                    >
+                      <FileCopyIcon color="primary" />
+                    </IconButton>
+                  </Stack>
                 </TableCell>
               </TableRow>
             );
