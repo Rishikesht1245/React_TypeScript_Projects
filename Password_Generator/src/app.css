@@ -116,3 +116,24 @@
     right: 0;
   }
 }
+
+/* Track */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #483c3c;
+}
+
+/* Track (track behind the thumb) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}

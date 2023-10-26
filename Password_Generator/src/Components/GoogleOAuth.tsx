@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { auth, provider } from "../firebase";
-import { UserCredential, getIdToken, signInWithPopup } from "firebase/auth";
+import { UserCredential, signInWithPopup } from "firebase/auth";
 import { saveLocally } from "../utils/localStorage";
 import toast from "react-hot-toast";
 import CloseIcon from "@mui/icons-material/Close";

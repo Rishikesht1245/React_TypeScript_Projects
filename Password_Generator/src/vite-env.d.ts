@@ -28,3 +28,15 @@ interface UserType {
   photoUrl: string;
   accessToken: string;
 }
+
+interface SavedPasswordType {
+  id: string;
+  name: string;
+  password: string;
+}
+
+interface PasswordTableProps {
+  pending: boolean;
+  passwords: SavedPasswordType[];
+  getAllPasswords: () => void;
+}

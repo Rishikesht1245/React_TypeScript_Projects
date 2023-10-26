@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom";
 import SymbolButton from "./UI/SymbolButton";
 import toast from "react-hot-toast";
 
-const Logout = () => {
+const Logout = ({ width }: { width: string }) => {
   const navigate = useNavigate();
   const handleLogout = (): void => {
-    console.log("reached");
     deleteLocalData();
     auth
       .signOut()
@@ -26,7 +25,7 @@ const Logout = () => {
       text="Logout"
       color="black"
       action={"logout"}
-      width="45%"
+      width={width}
       onClick={handleLogout}
     />
   );

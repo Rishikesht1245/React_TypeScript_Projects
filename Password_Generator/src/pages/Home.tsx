@@ -25,6 +25,7 @@ import Logout from "../Components/Logout";
 import { generatePassword } from "../utils/generatePassword";
 import toast from "react-hot-toast";
 import { savePassword } from "../models/savePassword";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [length, setLength] = useState<number>(6);
@@ -36,6 +37,8 @@ const Home = () => {
   });
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const handleLengthChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") setLength(newValue);
@@ -203,6 +206,12 @@ const Home = () => {
                     <IconButton
                       aria-label="toggle password visibility"
                       edge="end"
+                      onClick={() => {
+                        if (!password)
+                          return toast.error("Generate a password");
+                        navigator.clipboard.writeText(password);
+                        toast.success("Password copied to clipboard");
+                      }}
                     >
                       <FileCopyIcon color="primary" />
                     </IconButton>
@@ -237,7 +246,7 @@ const Home = () => {
               </Box>
               {/* check boxes */}
               <Stack justifyContent={"center"} marginTop={"-2rem"}>
-                <Stack direction={"row"}>
+                <Stack direction={{ xs: "column", sm: "row" }}>
                   <CheckBox
                     label="Lowercase ( a-z )"
                     option={options.lowercase}
@@ -251,7 +260,7 @@ const Home = () => {
                     name="uppercase"
                   />
                 </Stack>
-                <Stack direction={"row"}>
+                <Stack direction={{ xs: "column", sm: "row" }}>
                   <CheckBox
                     label="Symbols ( ~!@#$%^ )"
                     option={options.specialChars}
@@ -267,14 +276,14 @@ const Home = () => {
                 </Stack>
               </Stack>
             </FormControl>
+            <Buttons
+              text="Generate"
+              width="100%"
+              color="#1E5C0D"
+              onClick={handleGeneratePassword}
+            />
             {email || getLocalData() ? (
               <>
-                <Buttons
-                  text="Generate"
-                  width="100%"
-                  color="#1E5C0D"
-                  onClick={handleGeneratePassword}
-                />
                 <SymbolButton
                   text="Save Password"
                   color="#17172E"
@@ -291,8 +300,9 @@ const Home = () => {
                   color="#2E172E"
                   action={"passwords"}
                   width="90%"
+                  onClick={() => navigate("/saved-passwords")}
                 />
-                <Logout />
+                <Logout width="45%" />
               </>
             ) : (
               <GoogleOAuth setEmail={setEmail} />
