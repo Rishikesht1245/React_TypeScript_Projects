@@ -24,6 +24,7 @@ import { auth } from "../firebase";
 import Logout from "../Components/Logout";
 import { generatePassword } from "../utils/generatePassword";
 import toast from "react-hot-toast";
+import { savePassword } from "../models/savePassword";
 
 const Home = () => {
   const [length, setLength] = useState<number>(6);
@@ -148,7 +149,9 @@ const Home = () => {
     );
   };
 
-  const saveNewPassword = (passwordName: string): void => {};
+  const saveNewPassword = (passwordName: string): Promise<void> => {
+    return savePassword(email, { name: passwordName, password });
+  };
   return (
     <Box
       style={{
