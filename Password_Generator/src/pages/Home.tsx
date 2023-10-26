@@ -13,10 +13,14 @@ import {
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import bgImg from "/greyBgImg.jpg";
 import CheckBox from "../Components/UI/CheckBox";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Buttons from "../Components/UI/Buttons";
 import SymbolButton from "../Components/UI/SymbolButton";
 import GoogleOAuth from "../Components/GoogleOAuth";
+import { getLocalData } from "../utils/localStorage";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase";
+import Logout from "../Components/Logout";
 
 const Home = () => {
   const [length, setLength] = useState<number>(6);
@@ -26,10 +30,22 @@ const Home = () => {
     numbers: true,
     specialChars: true,
   });
-  const login: boolean = false;
+  const [email, setEmail] = useState<string>("");
+
   const handleLengthChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") setLength(newValue);
   };
+
+  useEffect(() => {
+    // when ever page refreshes the function will be invoked and it will validate whether user is logged in or not using onAuthStateChange method
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setEmail(user.email as string);
+      } else {
+        setEmail("");
+      }
+    });
+  }, [auth]);
 
   //   change handler for check boxes
   const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -156,7 +172,7 @@ const Home = () => {
                 </Stack>
               </Stack>
             </FormControl>
-            {login ? (
+            {email || getLocalData() ? (
               <>
                 <Buttons text="Generate" width="100%" color="#1E5C0D" />
                 <SymbolButton
@@ -171,15 +187,10 @@ const Home = () => {
                   action={"passwords"}
                   width="90%"
                 />
-                <SymbolButton
-                  text="Logout"
-                  color="black"
-                  action={"logout"}
-                  width="45%"
-                />
+                <Logout />
               </>
             ) : (
-              <GoogleOAuth />
+              <GoogleOAuth setEmail={setEmail} />
             )}
 
             {/* logout button */}

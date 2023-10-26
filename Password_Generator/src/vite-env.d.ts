@@ -19,4 +19,12 @@ interface ButtonProps {
   color: string;
   action?: string;
   width: string;
+  onClick?: () => void;
+}
+
+interface UserType {
+  displayName: string;
+  email: string;
+  photoUrl: string;
+  accessToken: string;
 }
