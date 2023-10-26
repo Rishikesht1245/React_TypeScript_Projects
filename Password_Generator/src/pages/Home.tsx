@@ -41,7 +41,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleLengthChange = (event: Event, newValue: number | number[]) => {
-    if (typeof newValue === "number") setLength(newValue);
+    if (event) if (typeof newValue === "number") setLength(newValue);
   };
 
   useEffect(() => {
