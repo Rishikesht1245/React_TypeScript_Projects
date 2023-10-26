@@ -21,6 +21,8 @@ import { getLocalData } from "../utils/localStorage";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import Logout from "../Components/Logout";
+import { generatePassword } from "../utils/generatePassword";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const [length, setLength] = useState<number>(6);
@@ -31,6 +33,7 @@ const Home = () => {
     specialChars: true,
   });
   const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const handleLengthChange = (event: Event, newValue: number | number[]) => {
     if (typeof newValue === "number") setLength(newValue);
@@ -45,7 +48,7 @@ const Home = () => {
         setEmail("");
       }
     });
-  }, [auth]);
+  }, []);
 
   //   change handler for check boxes
   const handleCheckChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -56,6 +59,16 @@ const Home = () => {
       // to mention the key should be allowed only if it is present in the OptionsType
       [name as keyof OptionsType]: !prev[name as keyof OptionsType],
     }));
+  };
+
+  const handleGeneratePassword = () => {
+    if (length < 1) return toast.error("Password length is 0");
+    let optionsValid: boolean = false;
+    optionsValid = Object.values(options).some((option) => option === true);
+    if (optionsValid) {
+      return setPassword(generatePassword(length, options));
+    }
+    return toast.error("Please select Preferences");
   };
 
   return (
@@ -96,6 +109,7 @@ const Home = () => {
                 id="outlined-adornment-password"
                 type="text"
                 readOnly
+                value={password}
                 placeholder="Select Preferences"
                 sx={{
                   backgroundColor: "rgba(255,255,255,0.6)",
@@ -174,7 +188,12 @@ const Home = () => {
             </FormControl>
             {email || getLocalData() ? (
               <>
-                <Buttons text="Generate" width="100%" color="#1E5C0D" />
+                <Buttons
+                  text="Generate"
+                  width="100%"
+                  color="#1E5C0D"
+                  onClick={handleGeneratePassword}
+                />
                 <SymbolButton
                   text="Save Password"
                   color="#17172E"
